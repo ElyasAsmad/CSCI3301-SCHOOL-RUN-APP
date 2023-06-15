@@ -12,8 +12,8 @@ A simple student drop off and pick-up system written in MIPS assembly for the Co
 | No | Name              |
 |----|-------------------|
 | 1  | Nur Arisha Nadira |
-| 2  | Elyas Asmad       |
-| 3  | Irdina Batrisyia [GitHub](https://github.com/ird1natris)  |
+| 2  | Elyas Asmad [(GitHub)](https://github.com/ElyasAsmad)       |
+| 3  | Irdina Batrisyia [(GitHub)](https://github.com/ird1natris)  |
 | 4  | Sayyidah Nafisah  |
 
 ## Instructor
