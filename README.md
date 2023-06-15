@@ -13,7 +13,7 @@ A simple student drop off and pick-up system written in MIPS assembly for the Co
 |----|-------------------|
 | 1  | Nur Arisha Nadira |
 | 2  | Elyas Asmad       |
-| 3  | Irdina Batrisyia  |
+| 3  | [Irdina Batrisyia](@ird1natris)  |
 | 4  | Sayyidah Nafisah  |
 
 ## Instructor
