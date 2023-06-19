@@ -38,10 +38,6 @@
 	#database consist of car plate number
 	database_car:	.asciiz "ABC 1234", "WXY 6789", "WHY 1430" 
 
-	# Entered car database ##################
-	entered_car: .word 000
-	#########################################
-
 	db_state: .word 0
 	current_user_idx: .word 0
 	
@@ -154,9 +150,9 @@ main:
 	# Check validity of user's input
 	# ---------------------------------------------------
 	
-	lb $t0, schoolOptionFirst		# Load 'D' into $t0 from memory
-	lb $t1, schoolOptionSecond		# Load 'P' into $t1 from memory
-	lb $t2, schoolOptionThird		# Load 'P' into $t1 from memory
+	lb $t0, schoolOptionFirst		# Load '1' into $t0 from memory
+	lb $t1, schoolOptionSecond		# Load '2' into $t1 from memory
+	lb $t2, schoolOptionThird		# Load '3' into $t2 from memory
 
 	seq $t0, $t0, $s0				# Set $t0 if user enters '1'
 	seq $t1, $t1, $s0				# Set $t1 if user enters '2'
@@ -166,6 +162,8 @@ main:
 	or $t3, $t3, $t2				# Check if user enters either ('1' or '2') or '3'
 	
 	beqz $t3, schoolOptionError		# If user enter answer other than '1' or '2' or '3'
+	
+	li $t3, 0						# Reset $t3 to 0
 
 	beq $t0, 1, enter_school_main	# If user input == '1', go to enter_school_main subroutine
 	beq $t1, 1, leave_school_main	# If user input == '2', go to leave_school_main subroutine
@@ -284,12 +282,10 @@ valid_leave_school:
 	la $a0, leaveMessage
 	jal print_string
 
-	# Increment available parking space by 1
-	lw $s7, parking
-	addi $s7, $s7, 1
-	sw $s7, parking
-
 	jal exit_parking
+
+	la $a0, spacer
+	jal print_string
 
 	j main
 	
@@ -398,36 +394,50 @@ invalid:
 		
 	la $a0, invalid_msg #print invalid message
 	jal print_string
+
+	la $a0, spacer
+	jal print_string
 	
 	j main				# Return to main
 		
 	#print this if the plate number scanned is valid
 valid: 
-	
+	bne $t2, $zero, notEqual #if plate[0] - db[0] = \n or 0xa when db has not done scanning, it will go to not equal
 	la $a0, valid_msg #print valid message
 	jal print_string 
 	
 	la $a0, plate #print plate number scanned besides "The car is registered:  "
 	jal print_string
 	
-	la $a0, student_name #print student name:
+	la $a0, student_name #print student_name:
+	jal print_string
+	beqz $t8, printNameFirst
+	j printName #Jump to printName 
+
+printNameFirst:
+	la $a0, ($s5) #load address db student to $a0
 	jal print_string
 
-	j printName
-		
+	bnez $t9, printName
+
+	lw $s7, db_state					# Check whether need to jump to other subroutine (This is a shared function)
+	beq $s7, 100, valid_leave_school	# if $s7 == 100 then goto valid_leave_school
+
+	j weight
+
 printName:
-	addiu $s5, $s5, 1
-	la $a0, ($s5)
+	addiu $s5, $s5, 1 #add increment to database_student
+	la $a0, ($s5) #load address db student to $a0
 	jal print_string
-	
+
 	bnez $t9, printName
 
 	lw $s7, db_state					# Check whether need to jump to other subroutine (This is a shared function)
 	beq $s7, 100, valid_leave_school	# if $s7 == 100 then goto valid_leave_school
 	
 	beqz $t9, weight
-	
-	j weight	
+
+	j weight
 
 weight:
 	#######################
@@ -462,7 +472,7 @@ true:
 	# Decrement parking space by 1, because a car has entered parking lot
 	jal enter_parking
 
-	j dorpmain
+	j dropOrPick
 	
 height_exceeds_limit:
     li $v0, 4                           # Print string
@@ -470,15 +480,6 @@ height_exceeds_limit:
     syscall
     
 	j main								# Return to main menu
-
-dorpmain:
-
-	# There are some codes here before... 
-	# ---------------------------------------------------
-
-	j dropOrPick
-	
-	# ---------------------------------------------------
 
 dropOrPick:	
 
