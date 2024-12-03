@@ -15,6 +15,7 @@ A simple student drop off and pick-up system written in MIPS assembly for the Co
 | 2  | Elyas Asmad [(GitHub)](https://github.com/ElyasAsmad)       |
 | 3  | Irdina Batrisyia [(GitHub)](https://github.com/ird1natris)  |
 | 4  | Sayyidah Nafisah  |
+| 5  | Linus Torvalds  |
 
 ## Instructor
 Ts. Dr. Hafizah Binti Mansor
